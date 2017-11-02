@@ -13,10 +13,38 @@ import Data.Functor.Identity
 import Data.Monoid hiding ((<>))
 import Data.Proxy
 import Data.Semigroup
+import Numeric.Natural
 import Prelude (Integer)
 import qualified Prelude as Base
 
 class Semigroup a => Abelian a
+
+instance Abelian ()
+instance (Abelian a, Abelian b) => Abelian (a, b) where
+instance (Abelian a, Abelian b, Abelian c) => Abelian (a, b, c) where
+instance (Abelian a, Abelian b, Abelian c, Abelian d) => Abelian (a, b, c, d) where
+instance (Abelian a, Abelian b, Abelian c, Abelian d, Abelian e) => Abelian (a, b, c, d, e) where
+
+instance Abelian a => Abelian (Identity a)
+instance Abelian a => Abelian (Dual a)
+instance Abelian (Proxy a)
+instance Abelian a => Abelian (Const a b)
+instance Abelian b => Abelian (a -> b)
+
+instance Abelian (Sum Natural)
+instance Abelian (Sum Integer)
+
+instance Abelian (Product Natural)
+instance Abelian (Product Integer)
+
+instance Abelian (Min Natural)
+instance Abelian (Max Natural)
+
+instance Abelian (Min Integer)
+instance Abelian (Max Integer)
+
+instance Abelian All
+instance Abelian Any
 
 class Semigroup a => Idempotent a
 
