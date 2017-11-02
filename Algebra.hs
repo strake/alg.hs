@@ -57,6 +57,21 @@ instance Abelian (Max Int)
 
 class Semigroup a => Idempotent a
 
+instance Idempotent ()
+instance (Idempotent a, Idempotent b) => Idempotent (a, b) where
+instance (Idempotent a, Idempotent b, Idempotent c) => Idempotent (a, b, c) where
+instance (Idempotent a, Idempotent b, Idempotent c, Idempotent d) => Idempotent (a, b, c, d) where
+instance (Idempotent a, Idempotent b, Idempotent c, Idempotent d, Idempotent e) => Idempotent (a, b, c, d, e) where
+
+instance Idempotent a => Idempotent (Identity a)
+instance Idempotent a => Idempotent (Dual a)
+instance Idempotent (Proxy a)
+instance Idempotent a => Idempotent (Const a b)
+instance Idempotent b => Idempotent (a -> b)
+
+instance Base.Ord a => Idempotent (Min a)
+instance Base.Ord a => Idempotent (Max a)
+
 class Monoid a => Group a where
     invert :: a -> a
 
