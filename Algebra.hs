@@ -3,7 +3,8 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Algebra where
+module Algebra (Semigroup (..), Monoid (mempty), Group (..), Abelian, Idempotent,
+                (+), (-), (*), (/)) where
 
 import Control.Category
 import Data.Functor
