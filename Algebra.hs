@@ -13,8 +13,9 @@ import Data.Functor.Identity
 import Data.Monoid hiding ((<>))
 import Data.Proxy
 import Data.Semigroup
+import Data.Word
 import Numeric.Natural
-import Prelude (Integer)
+import Prelude (Int, Integer)
 import qualified Prelude as Base
 
 class Semigroup a => Abelian a
@@ -33,15 +34,23 @@ instance Abelian b => Abelian (a -> b)
 
 instance Abelian (Sum Natural)
 instance Abelian (Sum Integer)
+instance Abelian (Sum Word)
+instance Abelian (Sum Int)
 
 instance Abelian (Product Natural)
 instance Abelian (Product Integer)
+instance Abelian (Product Word)
+instance Abelian (Product Int)
 
 instance Abelian (Min Natural)
-instance Abelian (Max Natural)
-
 instance Abelian (Min Integer)
+instance Abelian (Min Word)
+instance Abelian (Min Int)
+
+instance Abelian (Max Natural)
 instance Abelian (Max Integer)
+instance Abelian (Max Word)
+instance Abelian (Max Int)
 
 instance Abelian All
 instance Abelian Any
@@ -79,6 +88,8 @@ instance Group b => Group (a -> b) where invert = (.) invert
 instance Group a => Group (Base.IO a) where invert = fmap invert
 
 instance Group (Sum Integer) where invert (Sum a) = Sum (Base.negate a)
+instance Group (Sum Int) where invert (Sum a) = Sum (Base.negate a)
+instance Group (Sum Word) where invert (Sum a) = Sum (Base.negate a)
 
 (+) :: Semigroup (Sum a) => a -> a -> a
 a + b = getSum (Sum a <> Sum b)
