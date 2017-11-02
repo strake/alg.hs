@@ -5,7 +5,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 module Algebra (Semigroup (..), Monoid (mempty), Group (..), Abelian, Idempotent,
-                All, Any, Xor, (+), (-), (*), (/)) where
+                BitSet, Xor, (+), (-), (*), (/)) where
 
 import Control.Category
 import Data.Bits
@@ -13,9 +13,9 @@ import Data.Eq
 import Data.Functor
 import Data.Functor.Const
 import Data.Functor.Identity
-import Data.Monoid hiding ((<>), All, Any)
+import Data.Monoid hiding ((<>))
 import Data.Proxy
-import Data.Semigroup hiding (All, Any)
+import Data.Semigroup
 import Data.Word
 import Numeric.Natural
 import Prelude (Int, Integer)
@@ -104,33 +104,30 @@ instance Group (Sum Integer) where invert (Sum a) = Sum (Base.negate a)
 instance Group (Sum Int) where invert (Sum a) = Sum (Base.negate a)
 instance Group (Sum Word) where invert (Sum a) = Sum (Base.negate a)
 
-newtype All a = All { getAll :: a }
-  deriving (Eq, Bits, Base.Read, Base.Show)
-
-newtype Any a = Any { getAny :: a }
+newtype BitSet a = All { getAll :: a }
   deriving (Eq, Bits, Base.Read, Base.Show)
 
 newtype Xor a = Xor { getXor :: a }
   deriving (Eq, Bits, Base.Read, Base.Show)
 
-instance Bits a => Semigroup (All a) where (<>) = (.&.)
-instance Bits a => Semigroup (Any a) where (<>) = (.|.)
+instance Bits a => Semigroup (Min (BitSet a)) where Min a <> Min b = Min (a .&. b)
+instance Bits a => Semigroup (Max (BitSet a)) where Max a <> Max b = Max (a .|. b)
 instance Bits a => Semigroup (Xor a) where (<>) = xor
 
-instance Bits a => Abelian (All a)
-instance Bits a => Abelian (Any a)
+instance Bits a => Abelian (Min (BitSet a))
+instance Bits a => Abelian (Max (BitSet a))
 instance Bits a => Abelian (Xor a)
 
-instance Bits a => Idempotent (All a)
-instance Bits a => Idempotent (Any a)
+instance Bits a => Idempotent (Min (BitSet a))
+instance Bits a => Idempotent (Max (BitSet a))
 
-instance Bits a => Monoid (All a) where
+instance Bits a => Monoid (Min (BitSet a)) where
     mappend = (<>)
-    mempty = All (complement zeroBits)
+    mempty = Min (complement zeroBits)
 
-instance Bits a => Monoid (Any a) where
+instance Bits a => Monoid (Max (BitSet a)) where
     mappend = (<>)
-    mempty = Any zeroBits
+    mempty = Max zeroBits
 
 instance Bits a => Monoid (Xor a) where
     mappend = (<>)
