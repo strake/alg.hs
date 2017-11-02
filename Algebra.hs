@@ -2,17 +2,20 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 module Algebra (Semigroup (..), Monoid (mempty), Group (..), Abelian, Idempotent,
-                (+), (-), (*), (/)) where
+                All, Any, Xor, (+), (-), (*), (/)) where
 
 import Control.Category
+import Data.Bits
+import Data.Eq
 import Data.Functor
 import Data.Functor.Const
 import Data.Functor.Identity
-import Data.Monoid hiding ((<>))
+import Data.Monoid hiding ((<>), All, Any)
 import Data.Proxy
-import Data.Semigroup
+import Data.Semigroup hiding (All, Any)
 import Data.Word
 import Numeric.Natural
 import Prelude (Int, Integer)
@@ -52,9 +55,6 @@ instance Abelian (Max Integer)
 instance Abelian (Max Word)
 instance Abelian (Max Int)
 
-instance Abelian All
-instance Abelian Any
-
 class Semigroup a => Idempotent a
 
 class Monoid a => Group a where
@@ -90,6 +90,40 @@ instance Group a => Group (Base.IO a) where invert = fmap invert
 instance Group (Sum Integer) where invert (Sum a) = Sum (Base.negate a)
 instance Group (Sum Int) where invert (Sum a) = Sum (Base.negate a)
 instance Group (Sum Word) where invert (Sum a) = Sum (Base.negate a)
+
+newtype All a = All { getAll :: a }
+  deriving (Eq, Bits, Base.Read, Base.Show)
+
+newtype Any a = Any { getAny :: a }
+  deriving (Eq, Bits, Base.Read, Base.Show)
+
+newtype Xor a = Xor { getXor :: a }
+  deriving (Eq, Bits, Base.Read, Base.Show)
+
+instance Bits a => Semigroup (All a) where (<>) = (.&.)
+instance Bits a => Semigroup (Any a) where (<>) = (.|.)
+instance Bits a => Semigroup (Xor a) where (<>) = xor
+
+instance Bits a => Abelian (All a)
+instance Bits a => Abelian (Any a)
+instance Bits a => Abelian (Xor a)
+
+instance Bits a => Idempotent (All a)
+instance Bits a => Idempotent (Any a)
+
+instance Bits a => Monoid (All a) where
+    mappend = (<>)
+    mempty = All (complement zeroBits)
+
+instance Bits a => Monoid (Any a) where
+    mappend = (<>)
+    mempty = Any zeroBits
+
+instance Bits a => Monoid (Xor a) where
+    mappend = (<>)
+    mempty = Xor zeroBits
+
+instance Bits a => Group (Xor a) where invert = Xor . complement . getXor
 
 (+) :: Semigroup (Sum a) => a -> a -> a
 a + b = getSum (Sum a <> Sum b)
