@@ -16,6 +16,7 @@ tested-with:         GHC ==8.0.2
 
 library
   exposed-modules:     Algebra
+                     , Data.BitSet
                      , Relation.Binary.Comparison
   -- other-modules:       
   other-extensions:    
@@ -28,4 +29,5 @@ library
                      , TypeOperators
                      , ConstraintKinds
                      , PolyKinds
+                     , GeneralizedNewtypeDeriving
   ghc-options:         -Wall
