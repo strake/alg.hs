@@ -5,13 +5,10 @@
 
 module Algebra where
 
-import Control.Category
-import Data.Functor
-import Data.Functor.Const
-import Data.Functor.Identity
 import Data.Monoid
-import Data.Proxy
+import Data.Ord (Ord (..), Ordering (..))
 import Data.Semigroup
+import Numeric.Natural
 import Prelude (Integer)
 import qualified Prelude as Base
 
@@ -37,17 +34,49 @@ instance (Group a, Group b, Group c, Group d) => Group (a, b, c, d) where
 instance (Group a, Group b, Group c, Group d, Group e) => Group (a, b, c, d, e) where
     invert (a, b, c, d, e) = (invert a, invert b, invert c, invert d, invert e)
 
-instance Group a => Group (Identity a) where invert = fmap invert
+infixr 7 <|
+class (Semirng r, Semigroup a) => LeftModule r a where
+    (<|) :: r -> a -> a
 
-instance Group a => Group (Dual a) where invert (Dual a) = Dual (invert a)
+infixl 7 |>
+class (Semirng r, Semigroup a) => RightModule r a where
+    (|>) :: a -> r -> a
 
-instance Group (Proxy a) where invert Proxy = Proxy
+instance Monoid a => LeftModule Natural a where
+    0 <| _ = mempty
+    n <| a = a <> (n Base.- 1) <| a
 
-instance Group a => Group (Const a b) where invert (Const a) = Const (invert a)
+instance Monoid a => RightModule Natural a where
+    _ |> 0 = mempty
+    a |> n = a |> (n Base.- 1) <> a
 
-instance Group b => Group (a -> b) where invert = (.) invert
+instance Group a => LeftModule Integer a where
+    n <| a = case 0 `compare` n of EQ -> mempty
+                                   LT -> invert a <> (n+1) <| a
+                                   GT ->        a <> (n-1) <| a
 
-instance Group a => Group (Base.IO a) where invert = fmap invert
+instance Group a => RightModule Integer a where
+    a |> n = case 0 `compare` n of EQ -> mempty
+                                   LT -> a |> (n+1) <> invert a
+                                   GT -> a |> (n-1) <>        a
+
+type Module r a = (LeftModule r a, RightModule r a)
+
+class (Monoid (RingSum a), Semigroup (RingProduct a)) => Semirng a where
+    type RingSum a
+    type RingProduct a
+
+type Semiring a = (Semirng a, Monoid (RingProduct a))
+type Rng a = (Semirng a, Group (RingSum a))
+type Ring a = (Semiring a, Rng a)
+
+instance Semirng Natural where
+    type RingSum Natural = Sum Natural
+    type RingProduct Natural = Product Natural
+
+instance Semirng Integer where
+    type RingSum Integer = Sum Integer
+    type RingProduct Integer = Product Integer
 
 instance Group (Sum Integer) where invert (Sum a) = Sum (Base.negate a)
 
