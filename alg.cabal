@@ -16,6 +16,7 @@ tested-with:         GHC ==8.0.2
 
 library
   exposed-modules:     Algebra
+                     , Relation.Binary.Comparison
   -- other-modules:       
   other-extensions:    
   build-depends:       base >=4.9 && <5
