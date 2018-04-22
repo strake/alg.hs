@@ -31,8 +31,8 @@ class PartialEq a where
 class (Preord a, PartialEq a) => Eq a
 
 class (Preord a, PartialEq a) => PartialOrd a where
-    compareMay :: a -> a -> Maybe Ordering
-    compareMay a b = case (a ≤ b, b ≤ a) of
+    tryCompare :: a -> a -> Maybe Ordering
+    tryCompare a b = case (a ≤ b, b ≤ a) of
         (False, False) -> Nothing
         (False, True)  -> Just GT
         (True,  False) -> Just LT
@@ -40,23 +40,23 @@ class (Preord a, PartialEq a) => PartialOrd a where
 
 class (PartialOrd a, Eq a) => Ord a where
     compare :: a -> a -> Ordering
-    compare a b = fromJust (compareMay a b)
+    compare a b = fromJust (tryCompare a b)
 
 instance Preord () where () ≤ () = True
 instance PartialEq () where () ≡ () = True
-instance PartialOrd () where compareMay () () = Just EQ
+instance PartialOrd () where tryCompare () () = Just EQ
 instance Eq ()
 instance Ord ()
 
 instance Preord Bool where (≤) = (Prelude.<=)
 instance PartialEq Bool where (≡) = (Prelude.==)
-instance PartialOrd Bool where compareMay a b = Just (Prelude.compare a b)
+instance PartialOrd Bool where tryCompare a b = Just (Prelude.compare a b)
 instance Eq Bool
 instance Ord Bool
 
 instance Preord Ordering where (≤) = (Prelude.<=)
 instance PartialEq Ordering where (≡) = (Prelude.==)
-instance PartialOrd Ordering where compareMay a b = Just (Prelude.compare a b)
+instance PartialOrd Ordering where tryCompare a b = Just (Prelude.compare a b)
 instance Eq Ordering
 instance Ord Ordering
 
@@ -64,7 +64,7 @@ instance Preord Natural where
     (≤) = (Prelude.<=)
     (<) = (Prelude.<)
 instance PartialEq Natural where (≡) = (Prelude.==)
-instance PartialOrd Natural where compareMay a b = Just (Prelude.compare a b)
+instance PartialOrd Natural where tryCompare a b = Just (Prelude.compare a b)
 instance Eq Natural
 instance Ord Natural
 
@@ -72,7 +72,7 @@ instance Preord Integer where
     (≤) = (Prelude.<=)
     (<) = (Prelude.<)
 instance PartialEq Integer where (≡) = (Prelude.==)
-instance PartialOrd Integer where compareMay a b = Just (Prelude.compare a b)
+instance PartialOrd Integer where tryCompare a b = Just (Prelude.compare a b)
 instance Eq Integer
 instance Ord Integer
 
@@ -81,8 +81,8 @@ instance (PartialEq a, PartialEq b) => PartialEq (a, b) where
 instance (Preord a, Preord b) => Preord (a, b) where
     (aₗ, bₗ) ≤ (aᵣ, bᵣ) = aₗ ≤ aᵣ && bₗ ≤ bᵣ
 instance (PartialOrd a, PartialOrd b) => PartialOrd (a, b) where
-    compareMay (aₗ, bₗ) (aᵣ, bᵣ) = liftA2 (,) (compareMay aₗ aᵣ)
-                                              (compareMay bₗ bᵣ) >>= \ case
+    tryCompare (aₗ, bₗ) (aᵣ, bᵣ) = liftA2 (,) (tryCompare aₗ aᵣ)
+                                              (tryCompare bₗ bᵣ) >>= \ case
         (EQ, y)  -> Just y
         (x,  EQ) -> Just x
         (LT, LT) -> Just LT
@@ -90,11 +90,11 @@ instance (PartialOrd a, PartialOrd b) => PartialOrd (a, b) where
         _        -> Nothing
 
 instance (PartialOrd a, PartialOrd b) => Preord (Lexical (a, b)) where
-    a ≤ b = Just GT ≢ compareMay a b
-    a < b = Just LT ≡ compareMay a b
+    a ≤ b = Just GT ≢ tryCompare a b
+    a < b = Just LT ≡ tryCompare a b
 instance (PartialOrd a, PartialOrd b) => PartialOrd (Lexical (a, b)) where
-    Lexical (aₗ, bₗ) `compareMay` Lexical (aᵣ, bᵣ) =
-        compareMay aₗ aᵣ <> compareMay bₗ bᵣ
+    Lexical (aₗ, bₗ) `tryCompare` Lexical (aᵣ, bᵣ) =
+        tryCompare aₗ aᵣ <> tryCompare bₗ bᵣ
 instance (PartialOrd a, PartialOrd b, Eq a, Eq b) => Eq (Lexical (a, b))
 instance (Ord a, Ord b) => Ord (Lexical (a, b))
 
@@ -107,17 +107,17 @@ instance (PartialEq a, PartialEq b) => PartialEq (Either a b) where
     Right x ≡ Right y = x ≡ y
     _       ≡ _       = False
 instance (PartialOrd a, PartialOrd b) => PartialOrd (Either a b) where
-    Left  x `compareMay` Left  y = x `compareMay` y
-    Right x `compareMay` Right y = x `compareMay` y
-    _       `compareMay` _       = Nothing
+    Left  x `tryCompare` Left  y = x `tryCompare` y
+    Right x `tryCompare` Right y = x `tryCompare` y
+    _       `tryCompare` _       = Nothing
 
 instance (Preord a, Preord b) => Preord (Lexical (Either a b)) where
     Lexical (Left _) ≤ Lexical (Right _) = True
     Lexical x ≤ Lexical y = x ≤ y
 instance (PartialOrd a, PartialOrd b) => PartialOrd (Lexical (Either a b)) where
-    Lexical (Left _) `compareMay` Lexical (Right _) = Just LT
-    Lexical (Right _) `compareMay` Lexical (Left _) = Just GT
-    Lexical x `compareMay` Lexical y = compareMay x y
+    Lexical (Left _) `tryCompare` Lexical (Right _) = Just LT
+    Lexical (Right _) `tryCompare` Lexical (Left _) = Just GT
+    Lexical x `tryCompare` Lexical y = tryCompare x y
 instance (Eq a, Eq b) => Eq (Lexical (Either a b))
 instance (Ord a, Ord b) => Ord (Lexical (Either a b))
 
@@ -126,5 +126,5 @@ newtype Lexical a = Lexical a deriving (PartialEq, Semigroup, Monoid, Group)
 instance PartialEq a => PartialEq (Maybe a) where (≡) = (≡) `on` maybe (Left ()) Right
 instance Preord a => Preord (Maybe a) where (≤) = (≤) `on` maybe (Left ()) Right
 instance PartialOrd a => PartialOrd (Maybe a) where
-    compareMay = compareMay `on` maybe (Left ()) Right
+    tryCompare = tryCompare `on` maybe (Left ()) Right
 instance Eq a => Eq (Maybe a)
