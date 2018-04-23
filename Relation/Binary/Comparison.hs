@@ -12,8 +12,10 @@ import Control.Monad
 import Data.Bool
 import Data.Either
 import Data.Function (flip, on)
+import Data.Int
 import Data.Maybe
 import Data.Ord (Ordering (..))
+import Data.Word
 import Numeric.Natural
 
 infix 4 ≤, ≥, <, >, ≡, ≢
@@ -77,6 +79,86 @@ instance PartialEq Integer where (≡) = (Prelude.==)
 instance PartialOrd Integer where tryCompare a b = Just (Prelude.compare a b)
 instance Eq Integer
 instance Ord Integer
+
+instance Preord Int where
+    (≤) = (Prelude.<=)
+    (<) = (Prelude.<)
+instance PartialEq Int where (≡) = (Prelude.==)
+instance PartialOrd Int where tryCompare a b = Just (Prelude.compare a b)
+instance Eq Int
+instance Ord Int
+
+instance Preord Int8 where
+    (≤) = (Prelude.<=)
+    (<) = (Prelude.<)
+instance PartialEq Int8 where (≡) = (Prelude.==)
+instance PartialOrd Int8 where tryCompare a b = Just (Prelude.compare a b)
+instance Eq Int8
+instance Ord Int8
+
+instance Preord Int16 where
+    (≤) = (Prelude.<=)
+    (<) = (Prelude.<)
+instance PartialEq Int16 where (≡) = (Prelude.==)
+instance PartialOrd Int16 where tryCompare a b = Just (Prelude.compare a b)
+instance Eq Int16
+instance Ord Int16
+
+instance Preord Int32 where
+    (≤) = (Prelude.<=)
+    (<) = (Prelude.<)
+instance PartialEq Int32 where (≡) = (Prelude.==)
+instance PartialOrd Int32 where tryCompare a b = Just (Prelude.compare a b)
+instance Eq Int32
+instance Ord Int32
+
+instance Preord Int64 where
+    (≤) = (Prelude.<=)
+    (<) = (Prelude.<)
+instance PartialEq Int64 where (≡) = (Prelude.==)
+instance PartialOrd Int64 where tryCompare a b = Just (Prelude.compare a b)
+instance Eq Int64
+instance Ord Int64
+
+instance Preord Word where
+    (≤) = (Prelude.<=)
+    (<) = (Prelude.<)
+instance PartialEq Word where (≡) = (Prelude.==)
+instance PartialOrd Word where tryCompare a b = Just (Prelude.compare a b)
+instance Eq Word
+instance Ord Word
+
+instance Preord Word8 where
+    (≤) = (Prelude.<=)
+    (<) = (Prelude.<)
+instance PartialEq Word8 where (≡) = (Prelude.==)
+instance PartialOrd Word8 where tryCompare a b = Just (Prelude.compare a b)
+instance Eq Word8
+instance Ord Word8
+
+instance Preord Word16 where
+    (≤) = (Prelude.<=)
+    (<) = (Prelude.<)
+instance PartialEq Word16 where (≡) = (Prelude.==)
+instance PartialOrd Word16 where tryCompare a b = Just (Prelude.compare a b)
+instance Eq Word16
+instance Ord Word16
+
+instance Preord Word32 where
+    (≤) = (Prelude.<=)
+    (<) = (Prelude.<)
+instance PartialEq Word32 where (≡) = (Prelude.==)
+instance PartialOrd Word32 where tryCompare a b = Just (Prelude.compare a b)
+instance Eq Word32
+instance Ord Word32
+
+instance Preord Word64 where
+    (≤) = (Prelude.<=)
+    (<) = (Prelude.<)
+instance PartialEq Word64 where (≡) = (Prelude.==)
+instance PartialOrd Word64 where tryCompare a b = Just (Prelude.compare a b)
+instance Eq Word64
+instance Ord Word64
 
 instance (PartialEq a, PartialEq b) => PartialEq (a, b) where
     (aₗ, bₗ) ≡ (aᵣ, bᵣ) = aₗ ≡ aᵣ && bₗ ≡ bᵣ
