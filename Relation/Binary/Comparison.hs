@@ -16,6 +16,8 @@ import Data.Maybe
 import Data.Ord (Ordering (..))
 import Numeric.Natural
 
+infix 4 ≤, ≥, <, >, ≡, ≢
+
 class Preord a where
     (≤), (≥), (<), (>) :: a -> a -> Bool
     (≤) = flip (≥)
