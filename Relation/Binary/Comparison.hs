@@ -3,7 +3,7 @@
 
 module Relation.Binary.Comparison where
 
-import Prelude (Integer)
+import Prelude (Char, Integer)
 import qualified Prelude
 
 import Algebra
@@ -159,6 +159,14 @@ instance PartialEq Word64 where (≡) = (Prelude.==)
 instance PartialOrd Word64 where tryCompare a b = Just (Prelude.compare a b)
 instance Eq Word64
 instance Ord Word64
+
+instance Preord Char where
+    (≤) = (Prelude.<=)
+    (<) = (Prelude.<)
+instance PartialEq Char where (≡) = (Prelude.==)
+instance PartialOrd Char where tryCompare a b = Just (Prelude.compare a b)
+instance Eq Char
+instance Ord Char
 
 instance (PartialEq a, PartialEq b) => PartialEq (a, b) where
     (aₗ, bₗ) ≡ (aᵣ, bᵣ) = aₗ ≡ aᵣ && bₗ ≡ bᵣ
