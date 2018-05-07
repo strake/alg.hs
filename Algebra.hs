@@ -115,3 +115,6 @@ a * b = getProduct (Product a <> Product b)
 
 (/) :: (Semigroup (Product a), Group (Product a)) => a -> a -> a
 a / b = getProduct (Product a <> invert (Product b))
+
+commuteWith :: Group b => (a -> a -> b) -> a -> a -> b
+commuteWith f x y = f x y <> invert (f y x)
