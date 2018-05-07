@@ -3,10 +3,10 @@ module Data.BitSet where
 import Control.Applicative
 import Control.Monad (guard)
 import Data.Bits
-import Data.List (concatMap)
 import Data.Maybe
 import Prelude ((==))
 import qualified Prelude as Base
+import Util
 import Util.Bits
 
 import Algebra
@@ -30,9 +30,9 @@ instance Bits a => Monoid (BitSet a) where
     mempty = zeroBits
 instance Bits a => Group (BitSet a) where invert = complement
 
-rangeInclusive :: (PartialOrd a, Bits a) => a -> a -> [a]
+rangeInclusive :: (PartialOrd a, Bits a, Alternative f) => a -> a -> f a
 rangeInclusive = \ x y -> go y x <* guard (x ≤ y)
-  where go y x = x : concatMap (go y) (setBit x <$> setBits (y .&¬ x))
+  where go y x = x <| altMap (go y ∘ setBit x) (setBits (y .&¬ x) :: [_])
 
 (.&?¬) :: (PartialOrd a, Bits a) => a -> a -> Maybe a
 a .&?¬ b = a .&¬ b <$ guard (b ≤ a)
