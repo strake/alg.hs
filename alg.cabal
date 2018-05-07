@@ -32,5 +32,6 @@ library
                      , TypeOperators
                      , ConstraintKinds
                      , PolyKinds
+                     , StandaloneDeriving
                      , GeneralizedNewtypeDeriving
   ghc-options:         -Wall -Wno-partial-type-signatures

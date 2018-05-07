@@ -36,3 +36,5 @@ rangeInclusive = \ x y -> go y x <* guard (x ≤ y)
 
 (.&?¬) :: (PartialOrd a, Bits a) => a -> a -> Maybe a
 a .&?¬ b = a .&¬ b <$ guard (b ≤ a)
+
+instance Bits a => Monus (BitSet a) where monus = (.&¬)

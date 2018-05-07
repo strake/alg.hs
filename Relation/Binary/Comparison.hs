@@ -1,5 +1,4 @@
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE FlexibleContexts, FlexibleInstances #-}
 
 module Relation.Binary.Comparison where
 
@@ -14,6 +13,7 @@ import Data.Either
 import Data.Function (flip, on)
 import Data.Int
 import Data.Maybe
+import Data.Monoid (Sum (..))
 import Data.Ord (Ordering (..))
 import Data.Word
 import Numeric.Natural
@@ -220,3 +220,20 @@ instance Preord a => Preord (Maybe a) where (≤) = (≤) `on` maybe (Left ()) R
 instance PartialOrd a => PartialOrd (Maybe a) where
     tryCompare = tryCompare `on` maybe (Left ()) Right
 instance Eq a => Eq (Maybe a)
+
+class (Monoid a, Abelian a, PartialOrd a) => Monus a where
+    monus :: a -> a -> a
+
+deriving instance Preord (Sum Natural)
+deriving instance PartialEq (Sum Natural)
+deriving instance PartialOrd (Sum Natural)
+deriving instance Eq (Sum Natural)
+deriving instance Ord (Sum Natural)
+
+instance Monus (Sum Natural) where
+    0 `monus` _ = 0
+    a `monus` 0 = a
+    a `monus` b = (a Prelude.- 1) `monus` (b Prelude.- 1)
+
+(∸) :: Monus (Sum a) => a -> a -> a
+a ∸ b = getSum (Sum a `monus` Sum b)
