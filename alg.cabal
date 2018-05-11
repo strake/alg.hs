@@ -30,7 +30,6 @@ library
                      , EmptyCase
                      , PartialTypeSignatures
                      , TypeOperators
-                     , ConstraintKinds
                      , PolyKinds
                      , StandaloneDeriving
                      , GeneralizedNewtypeDeriving

@@ -1,7 +1,5 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE TypeFamilies #-}
 
 module Algebra (Semigroup (..), Monoid (mempty), Group (..), Abelian, Idempotent,
                 (+), (-), (*), (/)) where
