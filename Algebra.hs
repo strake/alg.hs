@@ -2,7 +2,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 
 module Algebra (Semigroup (..), Monoid (mempty), Group (..), Abelian, Idempotent,
-                (+), (-), (*), (/)) where
+                (+), (-), (*), (/), (×), commuteWith) where
 
 import Control.Category
 import Data.Functor
@@ -110,6 +110,9 @@ a - b = getSum (Sum a <> invert (Sum b))
 
 (*) :: Semigroup (Product a) => a -> a -> a
 a * b = getProduct (Product a <> Product b)
+
+(×) :: Semigroup (Product a) => a -> a -> a
+a × b = getProduct (Product a <> Product b)
 
 (/) :: (Semigroup (Product a), Group (Product a)) => a -> a -> a
 a / b = getProduct (Product a <> invert (Product b))
