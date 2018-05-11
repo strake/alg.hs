@@ -8,6 +8,7 @@ import qualified Prelude
 import Algebra
 import Control.Applicative
 import Control.Monad
+import Data.Bits
 import Data.Bool
 import Data.Either
 import Data.Function (flip, on)
@@ -237,3 +238,9 @@ instance Monus (Sum Natural) where
 
 (∸) :: Monus (Sum a) => a -> a -> a
 a ∸ b = getSum (Sum a `monus` Sum b)
+
+newtype Max a = Max { max :: a } deriving (Prelude.Eq, Bits, FiniteBits, Prelude.Read, Prelude.Show)
+newtype Min a = Min { min :: a } deriving (Prelude.Eq, Bits, FiniteBits, Prelude.Read, Prelude.Show)
+
+instance {-# OVERLAPPABLE #-} Ord a => Semigroup (Max a) where Max a <> Max b | a > b = Max a | otherwise = Max b
+instance {-# OVERLAPPABLE #-} Ord a => Semigroup (Min a) where Min a <> Min b | a < b = Min a | otherwise = Min b
