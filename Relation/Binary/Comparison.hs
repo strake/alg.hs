@@ -21,6 +21,7 @@ import Numeric.Natural
 infix 4 ≤, ≥, <, >, ≡, ≢
 
 class Preord a where
+    {-# MINIMAL (≥) | (≤) #-}
     (≤), (≥), (<), (>) :: a -> a -> Bool
     (≤) = flip (≥)
     (≥) = flip (≤)
@@ -28,6 +29,7 @@ class Preord a where
     (>) = flip (<)
 
 class PartialEq a where
+    {-# MINIMAL (≡) | (≢) #-}
     (≡), (≢) :: a -> a -> Bool
     a ≡ b = not (a ≢ b)
     a ≢ b = not (a ≡ b)
