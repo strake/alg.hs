@@ -14,7 +14,7 @@ import Data.Function (flip, on)
 import Data.Int
 import Data.Maybe
 import Data.Monoid (Sum (..))
-import Data.Ord (Ordering (..))
+import Data.Ord (Down (..), Ordering (..))
 import Data.Word
 import Numeric.Natural
 
@@ -47,6 +47,16 @@ class (Preord a, PartialEq a) => PartialOrd a where
 class (PartialOrd a, Eq a) => Ord a where
     compare :: a -> a -> Ordering
     compare a b = fromJust (tryCompare a b)
+
+instance Preord a => Preord (Down a) where
+    Down a ≤ Down b = a ≥ b
+    Down a ≥ Down b = a ≤ b
+    Down a < Down b = a > b
+    Down a > Down b = a < b
+deriving instance PartialEq a => PartialEq (Down a)
+instance PartialOrd a => PartialOrd (Down a) where Down a `tryCompare` Down b = tryCompare b a
+deriving instance Eq a => Eq (Down a)
+instance Ord a => Ord (Down a)
 
 instance Preord () where () ≤ () = True
 instance PartialEq () where () ≡ () = True
@@ -214,6 +224,16 @@ instance (PartialOrd a, PartialOrd b) => PartialOrd (Lexical (Either a b)) where
     Lexical x `tryCompare` Lexical y = tryCompare x y
 instance (Eq a, Eq b) => Eq (Lexical (Either a b))
 instance (Ord a, Ord b) => Ord (Lexical (Either a b))
+
+instance (Preord a) => Preord (Lexical (Maybe a)) where
+    Lexical Nothing ≤ Lexical (Just _) = True
+    Lexical x ≤ Lexical y = x ≤ y
+instance (PartialOrd a) => PartialOrd (Lexical (Maybe a)) where
+    Lexical Nothing `tryCompare` Lexical (Just _) = Just LT
+    Lexical (Just _) `tryCompare` Lexical Nothing = Just GT
+    Lexical x `tryCompare` Lexical y = tryCompare x y
+instance (Eq a) => Eq (Lexical (Maybe a))
+instance (Ord a) => Ord (Lexical (Maybe a))
 
 newtype Lexical a = Lexical a deriving (PartialEq, Semigroup, Monoid, Group)
 
