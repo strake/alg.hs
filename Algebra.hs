@@ -105,7 +105,7 @@ instance Group (Sum Word) where invert (Sum a) = Sum (Base.negate a)
 (+) :: Semigroup (Sum a) => a -> a -> a
 a + b = getSum (Sum a <> Sum b)
 
-(-) :: (Semigroup (Sum a), Group (Sum a)) => a -> a -> a
+(-) :: Group (Sum a) => a -> a -> a
 a - b = getSum (Sum a <> invert (Sum b))
 
 (*) :: Semigroup (Product a) => a -> a -> a

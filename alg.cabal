@@ -31,4 +31,4 @@ library
                      , PolyKinds
                      , StandaloneDeriving
                      , GeneralizedNewtypeDeriving
-  ghc-options:         -Wall -Wno-partial-type-signatures
+  ghc-options:         -Wall -Wcompat -Wredundant-constraints -Wno-partial-type-signatures
