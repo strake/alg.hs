@@ -261,8 +261,12 @@ instance Monus (Sum Natural) where
 (∸) :: Monus (Sum a) => a -> a -> a
 a ∸ b = getSum (Sum a `monus` Sum b)
 
-newtype Max a = Max { max :: a } deriving (Prelude.Eq, Bits, FiniteBits, Prelude.Read, Prelude.Show)
-newtype Min a = Min { min :: a } deriving (Prelude.Eq, Bits, FiniteBits, Prelude.Read, Prelude.Show)
+max, min :: Ord a => a -> a -> a
+max a b | a > b = a | otherwise = b
+min a b | a < b = a | otherwise = b
 
-instance {-# OVERLAPPABLE #-} Ord a => Semigroup (Max a) where Max a <> Max b | a > b = Max a | otherwise = Max b
-instance {-# OVERLAPPABLE #-} Ord a => Semigroup (Min a) where Min a <> Min b | a < b = Min a | otherwise = Min b
+newtype Max a = Max { unMax :: a } deriving (Prelude.Eq, Bits, FiniteBits, Prelude.Read, Prelude.Show)
+newtype Min a = Min { unMin :: a } deriving (Prelude.Eq, Bits, FiniteBits, Prelude.Read, Prelude.Show)
+
+instance {-# OVERLAPPABLE #-} Ord a => Semigroup (Max a) where Max a <> Max b = Max (max a b)
+instance {-# OVERLAPPABLE #-} Ord a => Semigroup (Min a) where Min a <> Min b = Min (min a b)
