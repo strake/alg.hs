@@ -1,3 +1,5 @@
+{-# LANGUAGE ViewPatterns #-}
+
 module Relation.Binary.Comparison where
 
 import Prelude (Char, Integer)
@@ -14,6 +16,7 @@ import Data.Int
 import Data.Maybe
 import Data.Monoid (Sum (..))
 import Data.Ord (Down (..), Ordering (..))
+import Data.Ratio
 import Data.Word
 import Numeric.Natural
 
@@ -268,3 +271,6 @@ newtype Min a = Min { unMin :: a } deriving (Prelude.Eq, Bits, FiniteBits, Prelu
 
 instance {-# OVERLAPPABLE #-} Ord a => Semigroup (Max a) where Max a <> Max b = Max (max a b)
 instance {-# OVERLAPPABLE #-} Ord a => Semigroup (Min a) where Min a <> Min b = Min (min a b)
+
+instance PartialEq a => PartialEq (Ratio a) where
+    (≡) = (≡) `on` liftA2 (,) numerator denominator
