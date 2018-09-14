@@ -1,5 +1,3 @@
-{-# LANGUAGE FlexibleContexts, FlexibleInstances #-}
-
 module Relation.Binary.Comparison where
 
 import Prelude (Char, Integer)

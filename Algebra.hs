@@ -1,6 +1,3 @@
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
-
 module Algebra (Semigroup (..), Monoid (mempty), Group (..), Abelian, Idempotent,
                 (+), (-), (*), (/), (×), commuteWith) where
 

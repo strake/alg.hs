@@ -29,6 +29,8 @@ library
                      , PartialTypeSignatures
                      , TypeOperators
                      , PolyKinds
+                     , FlexibleContexts
+                     , FlexibleInstances
                      , StandaloneDeriving
                      , GeneralizedNewtypeDeriving
   ghc-options:         -Wall -Wcompat -Wredundant-constraints -Wno-partial-type-signatures
