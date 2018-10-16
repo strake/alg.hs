@@ -274,3 +274,8 @@ instance {-# OVERLAPPABLE #-} Ord a => Semigroup (Min a) where Min a <> Min b = 
 
 instance PartialEq a => PartialEq (Ratio a) where
     (≡) = (≡) `on` liftA2 (,) numerator denominator
+
+instance PartialEq a => PartialEq [a] where
+    [] ≡ [] = True
+    x:xs ≡ y:ys = (x, xs) ≡ (y, ys)
+    _ ≡ _ = False
