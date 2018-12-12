@@ -204,6 +204,22 @@ instance (PartialOrd a, PartialOrd b) => PartialOrd (Lexical (a, b)) where
 instance (PartialOrd a, PartialOrd b, Eq a, Eq b) => Eq (Lexical (a, b))
 instance (Ord a, Ord b) => Ord (Lexical (a, b))
 
+instance (PartialEq a, PartialEq b, PartialEq c) => PartialEq (a, b, c) where
+    (aₗ, bₗ, cₗ) ≡ (aᵣ, bᵣ, cᵣ) = aₗ ≡ aᵣ && bₗ ≡ bᵣ && cₗ ≡ cᵣ
+instance (Preord a, Preord b, Preord c) => Preord (a, b, c) where
+    (aₗ, bₗ, cₗ) ≤ (aᵣ, bᵣ, cᵣ) = aₗ ≤ aᵣ && bₗ ≤ bᵣ && cₗ ≤ cᵣ
+instance (PartialOrd a, PartialOrd b, PartialOrd c) => PartialOrd (a, b, c) where
+    tryCompare (aₗ, bₗ, cₗ) (aᵣ, bᵣ, cᵣ) = tryCompare (aₗ, (bₗ, cₗ)) (aᵣ, (bᵣ, cᵣ))
+
+instance (PartialOrd a, PartialOrd b, PartialOrd c) => Preord (Lexical (a, b, c)) where
+    a ≤ b = Just GT ≢ tryCompare a b
+    a < b = Just LT ≡ tryCompare a b
+instance (PartialOrd a, PartialOrd b, PartialOrd c) => PartialOrd (Lexical (a, b, c)) where
+    Lexical (aₗ, bₗ, cₗ) `tryCompare` Lexical (aᵣ, bᵣ, cᵣ) =
+        tryCompare aₗ aᵣ <> tryCompare bₗ bᵣ <> tryCompare cₗ cᵣ
+instance (PartialOrd a, PartialOrd b, PartialOrd c, Eq a, Eq b, Eq c) => Eq (Lexical (a, b, c))
+instance (Ord a, Ord b, Ord c) => Ord (Lexical (a, b, c))
+
 instance (Preord a, Preord b) => Preord (Either a b) where
     Left  x ≤ Left  y = x ≤ y
     Right x ≤ Right y = x ≤ y
