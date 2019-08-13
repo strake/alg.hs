@@ -1,5 +1,3 @@
-{-# LANGUAGE ViewPatterns #-}
-
 module Relation.Binary.Comparison where
 
 import Prelude (Char, Integer)
