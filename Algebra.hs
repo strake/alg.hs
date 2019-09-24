@@ -95,9 +95,8 @@ instance Group a => Group (Const a b) where invert (Const a) = Const (invert a)
 
 instance Group b => Group (a -> b) where invert = (.) invert
 
-instance Group (Sum Integer) where invert (Sum a) = Sum (Base.negate a)
-instance Group (Sum Int) where invert (Sum a) = Sum (Base.negate a)
-instance Group (Sum Word) where invert (Sum a) = Sum (Base.negate a)
+instance Base.Num a => Group (Sum a) where invert (Sum a) = Sum (Base.negate a)
+instance Base.Fractional a => Group (Product a) where invert (Product a) = Product (Base.recip a)
 
 infixl 6 +, -
 infixl 7 ×, *, /
