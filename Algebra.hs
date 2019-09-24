@@ -100,7 +100,7 @@ instance Group (Sum Int) where invert (Sum a) = Sum (Base.negate a)
 instance Group (Sum Word) where invert (Sum a) = Sum (Base.negate a)
 
 infixl 6 +, -
-infixl 7 *, /
+infixl 7 ×, *, /
 
 (+) :: Semigroup (Sum a) => a -> a -> a
 a + b = getSum (Sum a <> Sum b)
