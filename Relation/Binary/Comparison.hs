@@ -1,4 +1,4 @@
-module Relation.Binary.Comparison where
+module Relation.Binary.Comparison (module Relation.Binary.Comparison, Ordering (..)) where
 
 import Prelude (Char, Integer)
 import qualified Prelude
