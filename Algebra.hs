@@ -99,10 +99,8 @@ instance Group b => Group (a -> b) where invert = (.) invert
 
 deriving instance Group (k b a) => Group (C.Dual k a b)
 
-instance Base.Num a => Group (Sum a) where invert (Sum a) = Sum (Base.negate a)
-instance Base.Fractional a => Group (Product a) where invert (Product a) = Product (Base.recip a)
-
-instance Base.Integral a => Group (Product (Base.Ratio a)) where invert = fmap Base.recip
+instance {-# OVERLAPPABLE #-} Base.Num a => Group (Sum a) where invert (Sum a) = Sum (Base.negate a)
+instance {-# OVERLAPPABLE #-} Base.Fractional a => Group (Product a) where invert (Product a) = Product (Base.recip a)
 
 infixl 6 +, -
 infixl 7 ×, *, /
