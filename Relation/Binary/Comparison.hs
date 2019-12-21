@@ -251,7 +251,7 @@ instance (PartialOrd a) => PartialOrd (Lexical (Maybe a)) where
 instance (Eq a) => Eq (Lexical (Maybe a))
 instance (Ord a) => Ord (Lexical (Maybe a))
 
-newtype Lexical a = Lexical a deriving (PartialEq, Semigroup, Monoid, Group)
+newtype Lexical a = Lexical { unLexical :: a } deriving (PartialEq, Semigroup, Monoid, Group)
 
 instance PartialEq a => PartialEq (Maybe a) where (≡) = (≡) `on` maybe (Left ()) Right
 instance Preord a => Preord (Maybe a) where (≤) = (≤) `on` maybe (Left ()) Right
