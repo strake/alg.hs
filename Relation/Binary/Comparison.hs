@@ -53,9 +53,9 @@ instance Preord a => Preord (Down a) where
     Down a ≥ Down b = a ≤ b
     Down a < Down b = a > b
     Down a > Down b = a < b
-deriving instance PartialEq a => PartialEq (Down a)
+deriving via a instance PartialEq a => PartialEq (Down a)
 instance PartialOrd a => PartialOrd (Down a) where Down a `tryCompare` Down b = tryCompare b a
-deriving instance Eq a => Eq (Down a)
+deriving via a instance Eq a => Eq (Down a)
 instance Ord a => Ord (Down a)
 
 instance Preord () where () ≤ () = True
@@ -251,7 +251,8 @@ instance (PartialOrd a) => PartialOrd (Lexical (Maybe a)) where
 instance (Eq a) => Eq (Lexical (Maybe a))
 instance (Ord a) => Ord (Lexical (Maybe a))
 
-newtype Lexical a = Lexical { unLexical :: a } deriving (PartialEq, Semigroup, Monoid, Group)
+newtype Lexical a = Lexical { unLexical :: a }
+  deriving (PartialEq, Semigroup, Monoid, Group) via a
 
 instance PartialEq a => PartialEq (Maybe a) where (≡) = (≡) `on` maybe (Left ()) Right
 instance Preord a => Preord (Maybe a) where (≤) = (≤) `on` maybe (Left ()) Right
@@ -262,11 +263,11 @@ instance Eq a => Eq (Maybe a)
 class (Monoid a, Abelian a, PartialOrd a) => Monus a where
     monus :: a -> a -> a
 
-deriving instance Preord (Sum Natural)
-deriving instance PartialEq (Sum Natural)
-deriving instance PartialOrd (Sum Natural)
-deriving instance Eq (Sum Natural)
-deriving instance Ord (Sum Natural)
+deriving via Natural instance Preord (Sum Natural)
+deriving via Natural instance PartialEq (Sum Natural)
+deriving via Natural instance PartialOrd (Sum Natural)
+deriving via Natural instance Eq (Sum Natural)
+deriving via Natural instance Ord (Sum Natural)
 
 instance Monus (Sum Natural) where
     0 `monus` _ = 0
@@ -280,8 +281,8 @@ max, min :: Ord a => a -> a -> a
 max a b | a > b = a | otherwise = b
 min a b | a < b = a | otherwise = b
 
-newtype Max a = Max { unMax :: a } deriving (Prelude.Eq, Bits, FiniteBits, Prelude.Read, Prelude.Show)
-newtype Min a = Min { unMin :: a } deriving (Prelude.Eq, Bits, FiniteBits, Prelude.Read, Prelude.Show)
+newtype Max a = Max { unMax :: a } deriving (Prelude.Eq, Bits, FiniteBits, Prelude.Read, Prelude.Show) via a
+newtype Min a = Min { unMin :: a } deriving (Prelude.Eq, Bits, FiniteBits, Prelude.Read, Prelude.Show) via a
 
 instance {-# OVERLAPPABLE #-} Ord a => Semigroup (Max a) where Max a <> Max b = Max (max a b)
 instance {-# OVERLAPPABLE #-} Ord a => Semigroup (Min a) where Min a <> Min b = Min (min a b)

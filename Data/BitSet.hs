@@ -13,7 +13,7 @@ import Algebra
 import Relation.Binary.Comparison
 
 newtype BitSet a = BitSet { bits :: a }
-  deriving (Base.Eq, Bits, FiniteBits, Base.Read, Base.Show)
+  deriving (Base.Eq, Bits, FiniteBits, Base.Read, Base.Show) via a
 
 instance Bits a => Preord (BitSet a) where
     BitSet x ≤ BitSet y = x .&. y == x

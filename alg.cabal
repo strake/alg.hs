@@ -34,5 +34,6 @@ library
                      , FlexibleContexts
                      , FlexibleInstances
                      , StandaloneDeriving
-                     , GeneralizedNewtypeDeriving
+                     , DerivingVia
+                     , Safe
   ghc-options:         -Wall -Wcompat -Wredundant-constraints -Wno-partial-type-signatures

@@ -97,7 +97,7 @@ instance Group a => Group (Const a b) where invert (Const a) = Const (invert a)
 
 instance Group b => Group (a -> b) where invert = (.) invert
 
-deriving instance Group (k b a) => Group (C.Dual k a b)
+deriving via (k b a) instance Group (k b a) => Group (C.Dual k a b)
 
 instance {-# OVERLAPPABLE #-} Base.Num a => Group (Sum a) where invert (Sum a) = Sum (Base.negate a)
 instance {-# OVERLAPPABLE #-} Base.Fractional a => Group (Product a) where invert (Product a) = Product (Base.recip a)
